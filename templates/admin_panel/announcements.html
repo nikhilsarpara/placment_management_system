@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% block title %}System Announcements{% endblock %}
+{% block page_title %}Broadcast Announcements{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+  <!-- Create Announcement Form -->
+  <div class="col-lg-5">
+    <div class="card shadow-sm border h-100">
+      <div class="card-header bg-white py-3 border-bottom">
+        <h5 class="fw-bold mb-0 text-dark"><i class="fa-solid fa-bullhorn text-primary me-2"></i>New Broadcast</h5>
+      </div>
+      <div class="card-body">
+        <form method="post" action="{% url 'admin_panel:announcements' %}">
+          {% csrf_token %}
+          <div class="form-group mb-3">
+            <label class="form-label" for="title">Announcement Subject</label>
+            <input type="text" name="title" id="title" class="form-control" placeholder="e.g. Campus Drive Schedule 2026 Updated" required>
+          </div>
+
+          <div class="form-group mb-3">
+            <label class="form-label" for="target_role">Target Audience</label>
+            <select name="target_role" id="target_role" class="form-select">
+              <option value="">All Users (Everyone)</option>
+              {% for r in role_choices %}
+                <option value="{{ r }}">{{ r }} Only</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="form-group mb-4">
+            <label class="form-label" for="content">Announcement Message</label>
+            <textarea name="content" id="content" rows="5" class="form-control" placeholder="Type your broadcast message here..." required></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary w-100">
+            <i class="fa-solid fa-paper-plane me-1"></i> Send Broadcast
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Announcement History -->
+  <div class="col-lg-7">
+    <div class="card shadow-sm border h-100">
+      <div class="card-header bg-white py-3 border-bottom d-flex align-items-center justify-content-between">
+        <h5 class="fw-bold mb-0 text-dark"><i class="fa-solid fa-clock-rotate-left text-secondary me-2"></i>Broadcast History</h5>
+        <span class="badge bg-light text-dark border">{{ announcements|length }} Sent</span>
+      </div>
+      <div class="card-body p-0">
+        <div class="list-group list-group-flush">
+          {% for ann in announcements %}
+            <div class="list-group-item p-3 border-bottom">
+              <div class="d-flex align-items-center justify-content-between mb-1">
+                <h6 class="fw-bold text-dark mb-0">{{ ann.title }}</h6>
+                <small class="text-muted"><i class="fa-regular fa-calendar me-1"></i>{{ ann.created_at|date:"M d, Y H:i" }}</small>
+              </div>
+              <div class="mb-2">
+                <span class="badge bg-primary-subtle text-primary border small">
+                  Audience: {{ ann.target_role|default:"All Users" }}
+                </span>
+                <span class="badge bg-light text-muted border small">
+                  By: {{ ann.sender.email }}
+                </span>
+              </div>
+              <p class="text-secondary small mb-0">{{ ann.content }}</p>
+            </div>
+          {% empty %}
+            <div class="p-5 text-center text-muted">
+              <i class="fa-solid fa-bullhorn mb-2" style="font-size: 2.5rem; opacity: 0.3;"></i>
+              <p class="mb-0">No broadcasts published yet.</p>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

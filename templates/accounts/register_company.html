@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% block title %}Register – Company{% endblock %}
+{% block content %}
+<div class="auth-page" style="align-items:flex-start; padding:2rem 1rem;">
+  <div class="auth-card" style="max-width:600px;">
+    <div class="auth-logo">
+      <div class="auth-logo-icon" style="background:var(--color-accent);">
+        <i class="fa-solid fa-building"></i>
+      </div>
+      <h1 class="auth-title">Register Company</h1>
+      <p class="auth-subtitle">Join PlacePro to recruit from top universities. Admin approval required.</p>
+    </div>
+
+    <form method="post" enctype="multipart/form-data" novalidate>
+      {% csrf_token %}
+      <div class="grid-2" style="gap:1rem;">
+        <div class="form-group">
+          <label class="form-label">Company Name *</label>
+          <input type="text" name="company_name" class="form-control" placeholder="e.g. Acme Corp" value="{{ post.company_name }}" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Industry</label>
+          <input type="text" name="industry" class="form-control" placeholder="e.g. IT, Finance" value="{{ post.industry }}">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email Address *</label>
+          <input type="email" name="email" class="form-control" placeholder="hr@company.com" value="{{ post.email }}" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Website</label>
+          <input type="url" name="website" class="form-control" placeholder="https://company.com" value="{{ post.website }}">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password *</label>
+          <input type="password" name="password" class="form-control" placeholder="Min 8 characters" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Confirm Password *</label>
+          <input type="password" name="confirm_password" class="form-control" placeholder="Re-enter password" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">HR Contact Name</label>
+          <input type="text" name="hr_name" class="form-control" value="{{ post.hr_name }}">
+        </div>
+        <div class="form-group">
+          <label class="form-label">HR Phone</label>
+          <input type="tel" name="hr_phone" class="form-control" value="{{ post.hr_phone }}">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Company Size</label>
+          <select name="size" class="form-control">
+            <option value="">Select size</option>
+            <option value="1-50" {% if post.size == '1-50' %}selected{% endif %}>1-50</option>
+            <option value="50-200" {% if post.size == '50-200' %}selected{% endif %}>50-200</option>
+            <option value="200-500" {% if post.size == '200-500' %}selected{% endif %}>200-500</option>
+            <option value="500-1000" {% if post.size == '500-1000' %}selected{% endif %}>500-1000</option>
+            <option value="1000+" {% if post.size == '1000+' %}selected{% endif %}>1000+</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">City</label>
+          <input type="text" name="city" class="form-control" value="{{ post.city }}">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Address</label>
+        <textarea name="address" class="form-control" rows="2">{{ post.address }}</textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Company Description</label>
+        <textarea name="description" class="form-control" rows="3" placeholder="Brief description of your company...">{{ post.description }}</textarea>
+      </div>
+      <div class="grid-2" style="gap:1rem;">
+        <div class="form-group">
+          <label class="form-label">Company Logo</label>
+          <input type="file" name="logo" class="form-control" accept="image/*">
+          <div class="form-hint">JPG, PNG, max 5MB</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Verification Document</label>
+          <input type="file" name="verification_doc" class="form-control" accept=".pdf,.doc,.docx">
+          <div class="form-hint">PDF or Word, max 5MB</div>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-accent w-100 btn-lg">
+        <i class="fa-solid fa-paper-plane"></i> Submit Registration
+      </button>
+    </form>
+    <div class="text-center mt-3 fs-sm">
+      Already have an account? <a href="{% url 'accounts:login' %}">Login</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

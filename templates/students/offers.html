@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% block title %}My Job Offers - PlacePro{% endblock %}
+{% block page_title %}Job Offers & Letters{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-4">
+  <div>
+    <h1 class="h3 fw-bold text-dark mb-1">Campus Placement Offers</h1>
+    <p class="text-muted small mb-0">Review compensation packages, download formal letters, and confirm acceptance.</p>
+  </div>
+  <div>
+    <span class="badge bg-success-subtle text-success border px-3 py-2 rounded-pill">
+      <i class="fa-solid fa-trophy me-1"></i> {{ offers_data|length }} Offer{{ offers_data|pluralize }} Received
+    </span>
+  </div>
+</div>
+
+<div class="row g-4">
+  {% for item in offers_data %}
+    <div class="col-lg-6">
+      <div class="card shadow-sm border h-100 p-4">
+        <div class="d-flex align-items-start justify-content-between mb-3">
+          <div>
+            <h5 class="fw-bold text-dark mb-1">{{ item.application.job.title }}</h5>
+            <div class="text-secondary fw-semibold">
+              <i class="fa-regular fa-building me-1"></i>{{ item.application.job.company.company_name }}
+            </div>
+          </div>
+          <span class="badge
+            {% if item.offer.student_response == 'ACCEPTED' %}badge-approved
+            {% elif item.offer.student_response == 'DECLINED' %}badge-rejected
+            {% else %}badge-pending{% endif %}">
+            Offer {{ item.offer.student_response }}
+          </span>
+        </div>
+
+        <div class="bg-light rounded p-3 mb-3 small">
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted">Offered Annual CTC / Stipend:</span>
+            <span class="fw-bold text-success fs-6">{{ item.offer.ctc_offered }}</span>
+          </div>
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted">Expected Date of Joining:</span>
+            <span class="fw-semibold text-dark">{{ item.offer.joining_date|date:"F d, Y"|default:"To be determined" }}</span>
+          </div>
+          <div class="d-flex justify-content-between">
+            <span class="text-muted">Offer Received On:</span>
+            <span class="text-secondary">{{ item.offer.created_at|date:"M d, Y" }}</span>
+          </div>
+        </div>
+
+        {% if item.offer.offer_letter_path %}
+          <div class="mb-4">
+            <a href="/media/{{ item.offer.offer_letter_path }}" target="_blank" class="btn btn-sm btn-outline-danger w-100">
+              <i class="fa-regular fa-file-pdf me-1"></i> Download Official Offer Letter (PDF)
+            </a>
+          </div>
+        {% endif %}
+
+        <div class="mt-auto pt-3 border-top">
+          {% if item.offer.student_response == 'PENDING' %}
+            <div class="d-flex gap-2">
+              <form method="post" action="{% url 'students:respond_offer' item.offer.id %}" class="flex-grow-1" onsubmit="return confirm('Accept this job offer?');">
+                {% csrf_token %}
+                <input type="hidden" name="response" value="ACCEPTED">
+                <button type="submit" class="btn btn-success w-100">
+                  <i class="fa-solid fa-check me-1"></i> Accept Offer
+                </button>
+              </form>
+              <form method="post" action="{% url 'students:respond_offer' item.offer.id %}" class="flex-grow-1" onsubmit="return confirm('Decline this job offer?');">
+                {% csrf_token %}
+                <input type="hidden" name="response" value="DECLINED">
+                <button type="submit" class="btn btn-outline-danger w-100">
+                  <i class="fa-solid fa-xmark me-1"></i> Decline
+                </button>
+              </form>
+            </div>
+          {% elif item.offer.student_response == 'ACCEPTED' %}
+            <div class="alert alert-success py-2 px-3 mb-0 text-center small">
+              <i class="fa-solid fa-circle-check me-1"></i> You accepted this offer on {{ item.offer.responded_at|date:"M d, Y" }}.
+            </div>
+          {% else %}
+            <div class="alert alert-secondary py-2 px-3 mb-0 text-center small">
+              <i class="fa-solid fa-circle-xmark me-1"></i> You declined this offer on {{ item.offer.responded_at|date:"M d, Y" }}.
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  {% empty %}
+    <div class="col-12 text-center py-5">
+      <div class="card p-5 border">
+        <i class="fa-solid fa-award text-muted mb-3" style="font-size: 3rem; opacity: 0.4;"></i>
+        <h5 class="fw-bold text-dark">No Active Offers Yet</h5>
+        <p class="text-muted small mb-3">Complete your interviews and keep applying to receive formal placement letters.</p>
+        <div>
+          <a href="{% url 'students:jobs' %}" class="btn btn-primary btn-sm">Explore Open Positions</a>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}

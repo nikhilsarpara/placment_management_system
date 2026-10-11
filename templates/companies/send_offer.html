@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block title %}Issue Job Offer - {{ application.student.full_name }}{% endblock %}
+{% block page_title %}Send Formal Job Offer{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <div class="card shadow-sm border">
+      <div class="card-header bg-white py-3 border-bottom">
+        <h5 class="fw-bold mb-0 text-dark"><i class="fa-solid fa-award text-success me-2"></i>Job Offer Details</h5>
+      </div>
+      <div class="card-body p-4">
+        <!-- Candidate Overview -->
+        <div class="card bg-light border p-3 mb-4">
+          <div class="d-flex align-items-center justify-content-between">
+            <div>
+              <h6 class="fw-bold text-dark mb-1">{{ application.student.full_name }}</h6>
+              <div class="small text-muted">
+                {{ application.student.university.name }} • {{ application.student.user.email }}
+              </div>
+            </div>
+            <div class="text-end">
+              <span class="badge badge-shortlisted">{{ application.job.title }}</span>
+            </div>
+          </div>
+        </div>
+
+        <form method="post" enctype="multipart/form-data" action="{% url 'companies:send_offer' application.id %}">
+          {% csrf_token %}
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <label class="form-label" for="ctc_offered">Offered CTC / Annual Package</label>
+              <input type="text" name="ctc_offered" id="ctc_offered" class="form-control" value="{{ application.job.ctc }}" placeholder="e.g. 14 LPA (Base: 12 LPA + Bonus)" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="joining_date">Expected Joining Date</label>
+              <input type="date" name="joining_date" id="joining_date" class="form-control" required>
+            </div>
+          </div>
+
+          <div class="form-group mb-4">
+            <label class="form-label" for="offer_letter">Offer Letter Document (PDF / DOCX)</label>
+            <input type="file" name="offer_letter" id="offer_letter" class="form-control" accept=".pdf,.doc,.docx">
+            <small class="text-muted">Attach formal appointment or offer letter copy.</small>
+          </div>
+
+          <div class="d-flex justify-content-between">
+            <a href="{% url 'companies:applicants' %}" class="btn btn-outline">Cancel</a>
+            <button type="submit" class="btn btn-success px-4">
+              <i class="fa-solid fa-paper-plane me-1"></i> Issue Official Offer
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

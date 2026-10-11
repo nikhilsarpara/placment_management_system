@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% block title %}Post New Job - {{ company.company_name }}{% endblock %}
+{% block page_title %}Create Job Posting{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-9">
+    <div class="card shadow-sm border">
+      <div class="card-header bg-white py-3 border-bottom">
+        <h5 class="fw-bold mb-0 text-dark"><i class="fa-solid fa-briefcase text-primary me-2"></i>Job Details & Criteria</h5>
+      </div>
+      <div class="card-body p-4">
+        <form method="post" action="{% url 'companies:create_job' %}">
+          {% csrf_token %}
+          <div class="form-group mb-3">
+            <label class="form-label" for="title">Job Title</label>
+            <input type="text" name="title" id="title" class="form-control" placeholder="e.g. Associate Software Engineer / Data Analyst" required>
+          </div>
+
+          <div class="row g-3 mb-3">
+            <div class="col-md-4">
+              <label class="form-label" for="job_type">Employment Type</label>
+              <select name="job_type" id="job_type" class="form-select">
+                {% for jt in job_types %}
+                  <option value="{{ jt }}">{{ jt }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label" for="ctc">Compensation Package (CTC / Stipend)</label>
+              <input type="text" name="ctc" id="ctc" class="form-control" placeholder="e.g. 12 LPA or ₹35,000/month">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label" for="location">Job Location</label>
+              <input type="text" name="location" id="location" class="form-control" placeholder="e.g. Bangalore, Remote, Hybrid">
+            </div>
+          </div>
+
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <label class="form-label" for="openings">Total Openings</label>
+              <input type="number" name="openings" id="openings" class="form-control" value="1" min="1">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="deadline">Application Deadline</label>
+              <input type="datetime-local" name="deadline" id="deadline" class="form-control">
+            </div>
+          </div>
+
+          <div class="form-group mb-3">
+            <label class="form-label" for="skills">Key Skills Required (Comma-separated)</label>
+            <input type="text" name="skills" id="skills" class="form-control" placeholder="e.g. Python, Django, PostgreSQL, Docker, AWS">
+            <small class="text-muted">Separate required technical competencies by commas.</small>
+          </div>
+
+          <div class="card bg-light border p-3 mb-3">
+            <h6 class="fw-bold text-dark mb-2"><i class="fa-solid fa-graduation-cap text-primary me-2"></i>Candidate Eligibility Criteria</h6>
+            <div class="row g-3">
+              <div class="col-md-4">
+                <label class="form-label small" for="min_cgpa">Minimum CGPA</label>
+                <input type="number" step="0.1" name="min_cgpa" id="min_cgpa" class="form-control form-control-sm" value="6.0" min="0" max="10">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label small" for="max_backlogs">Max Active Backlogs</label>
+                <input type="number" name="max_backlogs" id="max_backlogs" class="form-control form-control-sm" value="0" min="0">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label small" for="batch_years">Graduation Batches (Comma-separated)</label>
+                <input type="text" name="batch_years" id="batch_years" class="form-control form-control-sm" placeholder="e.g. 2026, 2027">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group mb-4">
+            <label class="form-label" for="description">Job Description & Responsibilities</label>
+            <textarea name="description" id="description" rows="6" class="form-control" placeholder="Detailed job responsibilities, candidate profile, and hiring process..." required></textarea>
+          </div>
+
+          <div class="d-flex justify-content-between">
+            <a href="{% url 'companies:jobs' %}" class="btn btn-outline">Cancel</a>
+            <button type="submit" class="btn btn-primary px-4">
+              <i class="fa-solid fa-paper-plane me-1"></i> Publish Job
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

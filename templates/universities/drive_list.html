@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% block title %}Placement Drives - {{ uni.name }}{% endblock %}
+{% block page_title %}Placement Drives{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-4">
+  <div>
+    <h1 class="h3 fw-bold text-dark mb-1">Campus Placement Drives</h1>
+    <p class="text-muted small mb-0">Organize and monitor on-campus and virtual hiring drives with verified recruiters.</p>
+  </div>
+  <a href="{% url 'universities:create_drive' %}" class="btn btn-primary">
+    <i class="fa-solid fa-plus me-1"></i> Organize New Drive
+  </a>
+</div>
+
+<div class="card shadow-sm border">
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>Drive Title</th>
+          <th>Company Partner</th>
+          <th>Scheduled Date</th>
+          <th>Venue / Mode</th>
+          <th>Eligibility</th>
+          <th>Status</th>
+          <th class="text-end">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for d in drives %}
+          <tr>
+            <td>
+              <div class="fw-bold text-dark">{{ d.title }}</div>
+              <small class="text-muted">{{ d.description|truncatewords:6 }}</small>
+            </td>
+            <td>
+              <div class="d-flex align-items-center gap-2">
+                <i class="fa-regular fa-building text-secondary"></i>
+                <span class="fw-semibold">{{ d.company.company_name }}</span>
+              </div>
+            </td>
+            <td class="small">{{ d.drive_date|date:"M d, Y H:i"|default:"TBA" }}</td>
+            <td class="small text-muted">{{ d.venue|default:"Online" }}</td>
+            <td class="small">
+              <div>Min CGPA: {{ d.eligibility.min_cgpa|default:"Open" }}</div>
+              <small class="text-muted">Max Backlogs: {{ d.eligibility.max_backlogs }}</small>
+            </td>
+            <td>
+              <span class="badge
+                {% if d.status == 'SCHEDULED' %}badge-shortlisted
+                {% elif d.status == 'ONGOING' %}badge-interview
+                {% elif d.status == 'COMPLETED' %}badge-approved
+                {% else %}badge-rejected{% endif %}">
+                {{ d.status }}
+              </span>
+            </td>
+            <td class="text-end">
+              <a href="{% url 'universities:drive_detail' d.id %}" class="btn btn-sm btn-outline-primary py-1 px-2">
+                <i class="fa-solid fa-eye me-1"></i> View
+              </a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="7" class="text-center py-5 text-muted">
+              <i class="fa-regular fa-calendar-xmark mb-2" style="font-size: 2.5rem; opacity: 0.3;"></i>
+              <p class="mb-0">No placement drives found. Click "Organize New Drive" to add one.</p>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

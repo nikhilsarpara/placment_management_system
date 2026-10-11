@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="{% block meta_description %}Placement Management Platform – Connecting Students, Universities, and Companies{% endblock %}" />
+  <title>{% block title %}Placement Management{% endblock %} | PlacePro</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <!-- Custom CSS -->
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+{% if user_role %}
+<!-- ═══════════════════ DASHBOARD LAYOUT ═══════════════════ -->
+<div class="app-wrapper">
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <a href="/" class="sidebar-logo" style="text-decoration:none;">
+        <div class="sidebar-logo-icon">
+          <i class="fa-solid fa-graduation-cap"></i>
+        </div>
+        <span>PlacePro</span>
+      </a>
+    </div>
+
+    <nav class="sidebar-nav">
+      {% if user_role == 'ADMIN' %}
+        <div class="sidebar-section-label">Overview</div>
+        <a href="{% url 'admin_panel:dashboard' %}" class="sidebar-link"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
+        <div class="sidebar-section-label">Management</div>
+        <a href="{% url 'admin_panel:university_list' %}" class="sidebar-link"><i class="fa-solid fa-university"></i> Universities</a>
+        <a href="{% url 'admin_panel:company_list' %}" class="sidebar-link"><i class="fa-solid fa-building"></i> Companies</a>
+        <a href="{% url 'admin_panel:user_list' %}" class="sidebar-link"><i class="fa-solid fa-users"></i> Users</a>
+        <a href="{% url 'admin_panel:job_list' %}" class="sidebar-link"><i class="fa-solid fa-briefcase"></i> Job Postings</a>
+        <div class="sidebar-section-label">Analytics</div>
+        <a href="{% url 'admin_panel:reports' %}" class="sidebar-link"><i class="fa-solid fa-chart-bar"></i> Reports</a>
+        <a href="{% url 'admin_panel:announcements' %}" class="sidebar-link"><i class="fa-solid fa-bullhorn"></i> Announcements</a>
+        <a href="{% url 'admin_panel:activity_logs' %}" class="sidebar-link"><i class="fa-solid fa-list-check"></i> Activity Logs</a>
+
+      {% elif user_role == 'UNIVERSITY' %}
+        <div class="sidebar-section-label">Overview</div>
+        <a href="{% url 'universities:dashboard' %}" class="sidebar-link"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
+        <div class="sidebar-section-label">Manage</div>
+        <a href="{% url 'universities:students' %}" class="sidebar-link"><i class="fa-solid fa-user-graduate"></i> Students</a>
+        <a href="{% url 'universities:departments' %}" class="sidebar-link"><i class="fa-solid fa-building-columns"></i> Departments</a>
+        <a href="{% url 'universities:drives' %}" class="sidebar-link"><i class="fa-solid fa-calendar-days"></i> Placement Drives</a>
+        <div class="sidebar-section-label">Reports</div>
+        <a href="{% url 'universities:reports' %}" class="sidebar-link"><i class="fa-solid fa-chart-pie"></i> Reports</a>
+        <a href="{% url 'universities:announce' %}" class="sidebar-link"><i class="fa-solid fa-bullhorn"></i> Announce</a>
+        <div class="sidebar-section-label">Account</div>
+        <a href="{% url 'universities:profile' %}" class="sidebar-link"><i class="fa-solid fa-id-card"></i> Profile</a>
+
+      {% elif user_role == 'COMPANY' %}
+        <div class="sidebar-section-label">Overview</div>
+        <a href="{% url 'companies:dashboard' %}" class="sidebar-link"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
+        <div class="sidebar-section-label">Recruitment</div>
+        <a href="{% url 'companies:jobs' %}" class="sidebar-link"><i class="fa-solid fa-briefcase"></i> Job Postings</a>
+        <a href="{% url 'companies:create_job' %}" class="sidebar-link"><i class="fa-solid fa-plus"></i> Post a Job</a>
+        <a href="{% url 'companies:applicants' %}" class="sidebar-link"><i class="fa-solid fa-users"></i> Applicants</a>
+        <div class="sidebar-section-label">Account</div>
+        <a href="{% url 'companies:profile' %}" class="sidebar-link"><i class="fa-solid fa-id-card"></i> Company Profile</a>
+
+      {% elif user_role == 'STUDENT' %}
+        <div class="sidebar-section-label">Overview</div>
+        <a href="{% url 'students:dashboard' %}" class="sidebar-link"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
+        <div class="sidebar-section-label">Opportunities</div>
+        <a href="{% url 'students:jobs' %}" class="sidebar-link"><i class="fa-solid fa-briefcase"></i> Browse Jobs</a>
+        <a href="{% url 'students:applications' %}" class="sidebar-link"><i class="fa-solid fa-file-alt"></i> My Applications</a>
+        <a href="{% url 'students:offers' %}" class="sidebar-link"><i class="fa-solid fa-envelope-open-text"></i> Offers</a>
+        <div class="sidebar-section-label">Account</div>
+        <a href="{% url 'students:profile' %}" class="sidebar-link"><i class="fa-solid fa-user"></i> My Profile</a>
+      {% endif %}
+
+      <div style="height: 1rem;"></div>
+      <a href="{% url 'notifications:list' %}" class="sidebar-link">
+        <i class="fa-solid fa-bell"></i> Notifications
+        {% if unread_count %}<span class="badge-pill">{{ unread_count }}</span>{% endif %}
+      </a>
+      <a href="{% url 'accounts:logout' %}" class="sidebar-link text-danger-light">
+        <i class="fa-solid fa-right-from-bracket"></i> Logout
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Top Bar -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle Sidebar">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <span class="topbar-title">{% block page_title %}Dashboard{% endblock %}</span>
+      </div>
+      <div class="topbar-right">
+        <a href="{% url 'notifications:list' %}" class="notif-btn" title="Notifications">
+          <i class="fa-solid fa-bell"></i>
+          {% if unread_count %}<span class="notif-badge">{{ unread_count }}</span>{% endif %}
+        </a>
+        <div class="dropdown">
+          <a href="#" class="user-pill" data-bs-toggle="dropdown" id="userDropdown">
+            <div class="user-avatar">
+              {% if current_user %}{{ current_user.email|slice:":1"|upper }}{% else %}?{% endif %}
+            </div>
+            <span>{{ current_user.email|truncatechars:20 }}</span>
+            <i class="fa-solid fa-chevron-down" style="font-size:0.65rem; color: var(--color-text-muted);"></i>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end shadow border-0" style="border-radius: var(--radius-md);">
+            {% if user_role == 'STUDENT' %}<li><a class="dropdown-item" href="{% url 'students:profile' %}"><i class="fa-solid fa-user me-2"></i>My Profile</a></li>{% endif %}
+            {% if user_role == 'UNIVERSITY' %}<li><a class="dropdown-item" href="{% url 'universities:profile' %}"><i class="fa-solid fa-id-card me-2"></i>Profile</a></li>{% endif %}
+            {% if user_role == 'COMPANY' %}<li><a class="dropdown-item" href="{% url 'companies:profile' %}"><i class="fa-solid fa-id-card me-2"></i>Profile</a></li>{% endif %}
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item text-danger" href="{% url 'accounts:logout' %}"><i class="fa-solid fa-right-from-bracket me-2"></i>Logout</a></li>
+          </ul>
+        </div>
+      </div>
+    </header>
+
+    <!-- Flash Messages -->
+    <div class="px-4 pt-3" id="flash-messages">
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}" data-auto-dismiss role="alert">
+          <i class="fa-solid {% if message.tags == 'success' %}fa-circle-check{% elif message.tags == 'danger' %}fa-circle-xmark{% elif message.tags == 'warning' %}fa-triangle-exclamation{% else %}fa-circle-info{% endif %}"></i>
+          <span>{{ message }}</span>
+          <button class="alert-close" type="button">×</button>
+        </div>
+      {% endfor %}
+    </div>
+
+    <!-- Page Content -->
+    <main class="page-content">
+{% else %}
+<!-- ═══════════════════ PUBLIC LAYOUT ═══════════════════════ -->
+<div id="flash-messages" class="container mt-3">
+  {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}" data-auto-dismiss role="alert">
+      <i class="fa-solid fa-circle-info"></i>
+      <span>{{ message }}</span>
+      <button class="alert-close" type="button">×</button>
+    </div>
+  {% endfor %}
+</div>
+<main class="public-content">
+{% endif %}
+
+      {% block content %}{% endblock %}
+
+{% if user_role %}
+    </main>
+  </div>
+</div>
+{% else %}
+</main>
+{% endif %}
+
+<!-- Bootstrap 5 JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<!-- Custom JS -->
+<script src="{% load static %}{% static 'js/main.js' %}"></script>
+{% block extra_js %}{% endblock %}
+
+<style>
+/* Inline tweaks */
+.badge-pill {
+  background: var(--color-danger);
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 0.1rem 0.4rem;
+  border-radius: 999px;
+}
+.text-danger-light { color: rgba(252,165,165,0.9) !important; }
+.dropdown-item { font-size: 0.875rem; }
+.skill-tag {
+  display: inline-flex; align-items: center; gap: 0.3rem;
+  background: rgba(30,58,138,0.08);
+  color: var(--color-primary);
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  margin: 0.2rem;
+}
+.skill-tag button {
+  background: none; border: none; cursor: pointer; color: var(--color-primary);
+  font-size: 0.9rem; line-height: 1; padding: 0;
+}
+</style>
+
+</body>
+</html>

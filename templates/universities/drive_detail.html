@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+{% block title %}{{ drive.title }} - Drive Details{% endblock %}
+{% block page_title %}Placement Drive Details{% endblock %}
+
+{% block content %}
+<div class="row g-4 mb-4">
+  <div class="col-lg-8">
+    <div class="card shadow-sm border h-100">
+      <div class="card-header bg-white py-3 border-bottom d-flex align-items-center justify-content-between">
+        <h5 class="fw-bold mb-0 text-dark">{{ drive.title }}</h5>
+        <span class="badge
+          {% if drive.status == 'SCHEDULED' %}badge-shortlisted
+          {% elif drive.status == 'ONGOING' %}badge-interview
+          {% elif drive.status == 'COMPLETED' %}badge-approved
+          {% else %}badge-rejected{% endif %}">
+          {{ drive.status }}
+        </span>
+      </div>
+      <div class="card-body p-4">
+        <div class="row g-3 mb-4">
+          <div class="col-sm-6">
+            <span class="text-muted small d-block">Company Partner</span>
+            <span class="fw-bold fs-6 text-dark"><i class="fa-regular fa-building me-1"></i>{{ drive.company.company_name }}</span>
+          </div>
+          <div class="col-sm-6">
+            <span class="text-muted small d-block">Date & Time</span>
+            <span class="fw-semibold text-dark"><i class="fa-regular fa-calendar me-1"></i>{{ drive.drive_date|date:"M d, Y H:i"|default:"TBA" }}</span>
+          </div>
+          <div class="col-sm-6">
+            <span class="text-muted small d-block">Venue / Location</span>
+            <span class="fw-semibold text-dark"><i class="fa-solid fa-location-dot me-1"></i>{{ drive.venue|default:"Online" }}</span>
+          </div>
+          <div class="col-sm-6">
+            <span class="text-muted small d-block">Eligibility Criteria</span>
+            <span class="fw-semibold text-dark">Min CGPA: {{ drive.eligibility.min_cgpa|default:"Open" }} | Backlogs: Max {{ drive.eligibility.max_backlogs }}</span>
+          </div>
+        </div>
+
+        {% if drive.description %}
+          <div class="border-top pt-3">
+            <h6 class="fw-bold text-dark mb-2">Instructions & Description</h6>
+            <p class="text-secondary small mb-0">{{ drive.description|linebreaks }}</p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-4">
+    <div class="card shadow-sm border h-100">
+      <div class="card-header bg-white py-3 border-bottom">
+        <h6 class="fw-bold mb-0 text-dark"><i class="fa-solid fa-chart-pie text-primary me-2"></i>Drive Participation</h6>
+      </div>
+      <div class="card-body p-4 text-center">
+        <div class="display-5 fw-bold text-primary mb-1">{{ applications|length }}</div>
+        <p class="text-muted small mb-3">Total Applications Registered</p>
+        <a href="{% url 'universities:drives' %}" class="btn btn-outline btn-sm w-100">
+          <i class="fa-solid fa-arrow-left me-1"></i> Back to Drives
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Applications in this Drive -->
+<div class="card shadow-sm border">
+  <div class="card-header bg-white py-3 border-bottom">
+    <h5 class="fw-bold mb-0 text-dark"><i class="fa-solid fa-users text-secondary me-2"></i>Registered Student Candidates ({{ applications|length }})</h5>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>Student</th>
+          <th>Roll Number</th>
+          <th>Department</th>
+          <th>CGPA</th>
+          <th>Applied On</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for app in applications %}
+          <tr>
+            <td>
+              <div class="fw-bold text-dark">{{ app.student.full_name }}</div>
+              <small class="text-muted">{{ app.student.user.email }}</small>
+            </td>
+            <td class="small font-monospace">{{ app.student.roll_number|default:"-" }}</td>
+            <td class="small">{{ app.student.department.name|default:"-" }}</td>
+            <td class="small fw-bold text-primary">{{ app.student.cgpa }}</td>
+            <td class="small text-muted">{{ app.applied_at|date:"M d, Y" }}</td>
+            <td>
+              <span class="badge
+                {% if app.status == 'SELECTED' %}badge-selected
+                {% elif app.status == 'INTERVIEW' %}badge-interview
+                {% elif app.status == 'SHORTLISTED' %}badge-shortlisted
+                {% elif app.status == 'REJECTED' %}badge-rejected
+                {% else %}badge-applied{% endif %}">
+                {{ app.status }}
+              </span>
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="6" class="text-center py-5 text-muted">
+              <i class="fa-regular fa-folder-open mb-2" style="font-size: 2.5rem; opacity: 0.3;"></i>
+              <p class="mb-0">No candidate applications registered under this drive yet.</p>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

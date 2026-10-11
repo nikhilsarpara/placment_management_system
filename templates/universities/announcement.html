@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}Campus Announcement - {{ uni.name }}{% endblock %}
+{% block page_title %}Send Student Announcement{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <div class="card shadow-sm border">
+      <div class="card-header bg-white py-3 border-bottom">
+        <h5 class="fw-bold mb-0 text-dark"><i class="fa-solid fa-bullhorn text-primary me-2"></i>New Student Broadcast</h5>
+      </div>
+      <div class="card-body p-4">
+        <p class="text-muted small mb-4">
+          Send an official notification to all registered students of <strong>{{ uni.name }}</strong> regarding upcoming campus drives, pre-placement talks, or resume deadlines.
+        </p>
+
+        <form method="post" action="{% url 'universities:announce' %}">
+          {% csrf_token %}
+          <div class="form-group mb-3">
+            <label class="form-label" for="title">Announcement Subject</label>
+            <input type="text" name="title" id="title" class="form-control" placeholder="e.g. PPT by Infosys on Friday at 10:00 AM" required>
+          </div>
+
+          <div class="form-group mb-4">
+            <label class="form-label" for="content">Announcement Message Body</label>
+            <textarea name="content" id="content" rows="6" class="form-control" placeholder="Provide full drive instructions, venue details, or preparation guidelines..." required></textarea>
+          </div>
+
+          <div class="d-flex justify-content-between">
+            <a href="{% url 'universities:dashboard' %}" class="btn btn-outline">Cancel</a>
+            <button type="submit" class="btn btn-primary px-4">
+              <i class="fa-solid fa-paper-plane me-1"></i> Send Announcement
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

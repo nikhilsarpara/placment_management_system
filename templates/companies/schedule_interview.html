@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block title %}Schedule Interview - {{ application.student.full_name }}{% endblock %}
+{% block page_title %}Schedule Candidate Interview{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <div class="card shadow-sm border">
+      <div class="card-header bg-white py-3 border-bottom">
+        <h5 class="fw-bold mb-0 text-dark"><i class="fa-solid fa-calendar-check text-primary me-2"></i>Interview Invitation</h5>
+      </div>
+      <div class="card-body p-4">
+        <!-- Candidate Overview Summary -->
+        <div class="card bg-light border p-3 mb-4">
+          <div class="d-flex align-items-center justify-content-between">
+            <div>
+              <h6 class="fw-bold text-dark mb-1">{{ application.student.full_name }}</h6>
+              <div class="small text-muted">
+                {{ application.student.university.name }} • CGPA: <strong>{{ application.student.cgpa }}</strong>
+              </div>
+            </div>
+            <div class="text-end">
+              <span class="badge bg-primary-subtle text-primary border small">{{ application.job.title }}</span>
+            </div>
+          </div>
+        </div>
+
+        <form method="post" action="{% url 'companies:schedule_interview' application.id %}">
+          {% csrf_token %}
+          <div class="form-group mb-3">
+            <label class="form-label" for="round_name">Interview Round Name</label>
+            <input type="text" name="round_name" id="round_name" class="form-control" value="Technical Round 1" placeholder="e.g. Coding Assessment / Technical Discussion / HR Round" required>
+          </div>
+
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <label class="form-label" for="scheduled_at">Scheduled Date & Time</label>
+              <input type="datetime-local" name="scheduled_at" id="scheduled_at" class="form-control" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="mode">Interview Mode</label>
+              <select name="mode" id="mode" class="form-select">
+                {% for m in modes %}
+                  <option value="{{ m }}">{{ m }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group mb-4">
+            <label class="form-label" for="link_or_venue">Meeting URL or On-Campus Venue</label>
+            <input type="text" name="link_or_venue" id="link_or_venue" class="form-control" placeholder="https://meet.google.com/xyz or Room 302, Placement Cell" required>
+          </div>
+
+          <div class="d-flex justify-content-between">
+            <a href="{% url 'companies:applicants' %}" class="btn btn-outline">Cancel</a>
+            <button type="submit" class="btn btn-primary px-4">
+              <i class="fa-solid fa-paper-plane me-1"></i> Send Interview Invite
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

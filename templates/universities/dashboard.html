@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+{% block title %}University Dashboard - {{ uni.name }}{% endblock %}
+{% block page_title %}{{ uni.name }} - Placement Cell{% endblock %}
+
+{% block content %}
+<!-- Quick Stat Cards -->
+<div class="row g-3 mb-4">
+  <div class="col-sm-6 col-xl-3">
+    <div class="stat-card">
+      <div class="stat-icon primary">
+        <i class="fa-solid fa-user-graduate"></i>
+      </div>
+      <div>
+        <div class="stat-value">{{ total_students }}</div>
+        <div class="stat-label">Enrolled Students</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-6 col-xl-3">
+    <div class="stat-card">
+      <div class="stat-icon success">
+        <i class="fa-solid fa-award"></i>
+      </div>
+      <div>
+        <div class="stat-value">{{ placed_students }}</div>
+        <div class="stat-label">Placed Students</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-6 col-xl-3">
+    <div class="stat-card">
+      <div class="stat-icon accent">
+        <i class="fa-solid fa-chart-pie"></i>
+      </div>
+      <div>
+        <div class="stat-value">{{ placement_rate }}%</div>
+        <div class="stat-label">Placement Rate</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-6 col-xl-3">
+    <div class="stat-card">
+      <div class="stat-icon secondary">
+        <i class="fa-solid fa-calendar-check"></i>
+      </div>
+      <div>
+        <div class="stat-value">{{ active_drives }}</div>
+        <div class="stat-label">Active Campus Drives</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Quick Action shortcuts -->
+<div class="card shadow-sm border mb-4">
+  <div class="card-body p-3">
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+      <div class="fw-bold text-dark"><i class="fa-solid fa-bolt text-warning me-2"></i>Quick Actions</div>
+      <div class="d-flex flex-wrap gap-2">
+        <a href="{% url 'universities:create_drive' %}" class="btn btn-primary btn-sm">
+          <i class="fa-solid fa-plus me-1"></i> New Placement Drive
+        </a>
+        <a href="{% url 'universities:bulk_upload' %}" class="btn btn-secondary btn-sm">
+          <i class="fa-solid fa-file-csv me-1"></i> Bulk Upload Students
+        </a>
+        <a href="{% url 'universities:announce' %}" class="btn btn-outline-primary btn-sm">
+          <i class="fa-solid fa-bullhorn me-1"></i> Send Announcement
+        </a>
+        <a href="{% url 'universities:reports' %}" class="btn btn-outline btn-sm">
+          <i class="fa-solid fa-chart-column me-1"></i> View Report
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Recent Drives Table -->
+<div class="card shadow-sm border mb-4">
+  <div class="card-header bg-white py-3 d-flex align-items-center justify-content-between border-bottom">
+    <h5 class="fw-bold mb-0 text-dark"><i class="fa-solid fa-calendar-days text-primary me-2"></i>Upcoming & Recent Placement Drives</h5>
+    <a href="{% url 'universities:drives' %}" class="btn btn-sm btn-outline-primary">View All Drives</a>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>Drive Title</th>
+          <th>Recruiting Partner</th>
+          <th>Drive Date</th>
+          <th>Venue</th>
+          <th>Status</th>
+          <th class="text-end">Details</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for drive in recent_drives %}
+          <tr>
+            <td>
+              <div class="fw-bold text-dark">{{ drive.title }}</div>
+              <small class="text-muted">{{ drive.description|truncatewords:8 }}</small>
+            </td>
+            <td>
+              <div class="d-flex align-items-center gap-2">
+                <i class="fa-regular fa-building text-secondary"></i>
+                <span class="fw-semibold text-dark">{{ drive.company.company_name }}</span>
+              </div>
+            </td>
+            <td class="small">{{ drive.drive_date|date:"M d, Y H:i"|default:"TBA" }}</td>
+            <td class="small text-muted">{{ drive.venue|default:"Online / Campus Hall" }}</td>
+            <td>
+              <span class="badge
+                {% if drive.status == 'SCHEDULED' %}badge-shortlisted
+                {% elif drive.status == 'ONGOING' %}badge-interview
+                {% elif drive.status == 'COMPLETED' %}badge-approved
+                {% else %}badge-rejected{% endif %}">
+                {{ drive.status }}
+              </span>
+            </td>
+            <td class="text-end">
+              <a href="{% url 'universities:drive_detail' drive.id %}" class="btn btn-sm btn-outline-primary py-1 px-2">
+                <i class="fa-solid fa-arrow-right"></i>
+              </a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="6" class="text-center py-5 text-muted">
+              <i class="fa-regular fa-calendar-xmark mb-2" style="font-size: 2.5rem; opacity: 0.3;"></i>
+              <p class="mb-0">No placement drives organized yet. Click "New Placement Drive" to get started.</p>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% block title %}Create Placement Drive - PlacePro{% endblock %}
+{% block page_title %}Organize Placement Drive{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-9">
+    <div class="card shadow-sm border">
+      <div class="card-header bg-white py-3 border-bottom">
+        <h5 class="fw-bold mb-0 text-dark"><i class="fa-solid fa-calendar-plus text-primary me-2"></i>Drive Details</h5>
+      </div>
+      <div class="card-body p-4">
+        <form method="post" action="{% url 'universities:create_drive' %}">
+          {% csrf_token %}
+          <div class="form-group mb-3">
+            <label class="form-label" for="title">Placement Drive Title</label>
+            <input type="text" name="title" id="title" class="form-control" placeholder="e.g. Google Campus Hiring Drive 2026" required>
+          </div>
+
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <label class="form-label" for="company_id">Participating Company</label>
+              <select name="company_id" id="company_id" class="form-select" required>
+                <option value="">Select Company Partner</option>
+                {% for c in companies %}
+                  <option value="{{ c.id }}">{{ c.company_name }} ({{ c.industry|default:"Tech" }})</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="drive_date">Date & Time</label>
+              <input type="datetime-local" name="drive_date" id="drive_date" class="form-control" required>
+            </div>
+          </div>
+
+          <div class="form-group mb-3">
+            <label class="form-label" for="venue">Venue / Online Link</label>
+            <input type="text" name="venue" id="venue" class="form-control" placeholder="e.g. Auditorium Hall B / Zoom Link" required>
+          </div>
+
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <label class="form-label" for="min_cgpa">Minimum CGPA Required</label>
+              <input type="number" step="0.1" name="min_cgpa" id="min_cgpa" class="form-control" value="6.0" min="0" max="10">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="max_backlogs">Maximum Active Backlogs Allowed</label>
+              <input type="number" name="max_backlogs" id="max_backlogs" class="form-control" value="0" min="0">
+            </div>
+          </div>
+
+          <div class="form-group mb-4">
+            <label class="form-label" for="description">Instructions & Process Description</label>
+            <textarea name="description" id="description" rows="4" class="form-control" placeholder="Rounds details, dress code, documents to carry, resume requirements..."></textarea>
+          </div>
+
+          <div class="d-flex justify-content-between">
+            <a href="{% url 'universities:drives' %}" class="btn btn-outline">Cancel</a>
+            <button type="submit" class="btn btn-primary px-4">
+              <i class="fa-solid fa-check me-1"></i> Create Drive
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

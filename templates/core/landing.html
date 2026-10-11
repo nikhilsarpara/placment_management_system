@@ -1,0 +1,176 @@
+{% extends 'base.html' %}
+{% block title %}Welcome{% endblock %}
+{% block content %}
+{% load static %}
+
+<!-- Nav -->
+<nav class="landing-nav">
+  <div class="container d-flex align-items-center justify-content-between">
+    <a href="/" class="sidebar-logo" style="text-decoration:none; color:var(--color-text-heading);">
+      <div class="sidebar-logo-icon" style="background:var(--color-primary);">
+        <i class="fa-solid fa-graduation-cap text-white"></i>
+      </div>
+      <span style="font-family:'Poppins',sans-serif; font-weight:700;">PlacePro</span>
+    </a>
+    <div class="d-flex gap-2">
+      <a href="{% url 'accounts:login' %}" class="btn btn-outline">Login</a>
+      <a href="{% url 'accounts:register_student' %}" class="btn btn-primary">Get Started</a>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero-section">
+  <div class="container position-relative">
+    <div class="row align-items-center gy-4">
+      <div class="col-lg-7">
+        <div class="hero-badge">
+          <i class="fa-solid fa-star"></i>
+          Trusted by 500+ institutions
+        </div>
+        <h1 class="hero-title">
+          Smart <span>Placement</span><br>
+          Management Platform
+        </h1>
+        <p class="hero-subtitle">
+          Connect students, universities, and companies on one seamless platform.
+          Streamline campus placements from job postings to offer letters.
+        </p>
+        <div class="d-flex flex-wrap gap-3">
+          <a href="{% url 'accounts:register_student' %}" class="btn btn-accent btn-lg">
+            <i class="fa-solid fa-user-graduate"></i> Register as Student
+          </a>
+          <a href="{% url 'accounts:login' %}" class="btn btn-lg" style="background:rgba(255,255,255,0.15); color:#fff; border:1px solid rgba(255,255,255,0.3);">
+            <i class="fa-solid fa-arrow-right-to-bracket"></i> Login
+          </a>
+        </div>
+
+        <!-- Stats row -->
+        <div class="d-flex flex-wrap gap-4 mt-4">
+          <div>
+            <div style="font-size:1.8rem; font-weight:800; color:#fff;">{{ stats.students }}+</div>
+            <div style="font-size:0.8rem; color:rgba(255,255,255,0.7);">Students</div>
+          </div>
+          <div style="width:1px; background:rgba(255,255,255,0.2);"></div>
+          <div>
+            <div style="font-size:1.8rem; font-weight:800; color:#fff;">{{ stats.companies }}+</div>
+            <div style="font-size:0.8rem; color:rgba(255,255,255,0.7);">Companies</div>
+          </div>
+          <div style="width:1px; background:rgba(255,255,255,0.2);"></div>
+          <div>
+            <div style="font-size:1.8rem; font-weight:800; color:#fff;">{{ stats.placements }}+</div>
+            <div style="font-size:0.8rem; color:rgba(255,255,255,0.7);">Placements</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-5 text-center d-none d-lg-block">
+        <div style="background:rgba(255,255,255,0.1); backdrop-filter:blur(10px); border:1px solid rgba(255,255,255,0.2); border-radius:20px; padding:2rem;">
+          <i class="fa-solid fa-handshake" style="font-size:6rem; color:rgba(255,255,255,0.8);"></i>
+          <p style="color:rgba(255,255,255,0.8); margin-top:1rem; font-size:0.95rem;">Bridging the gap between talent and opportunity</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features -->
+<section style="padding: 5rem 0; background: var(--color-bg);">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 style="font-size:2rem; font-weight:700;">Everything you need for campus placement</h2>
+      <p class="text-muted mt-2">A unified platform with role-based modules for every stakeholder.</p>
+    </div>
+    <div class="grid-3">
+      <div class="feature-card">
+        <div class="feature-icon primary" style="background:rgba(30,58,138,0.1);">
+          <i class="fa-solid fa-briefcase text-primary"></i>
+        </div>
+        <h5 class="fw-600 mb-2">Smart Job Matching</h5>
+        <p class="text-muted fs-sm">Eligibility-based filtering ensures students only see jobs they qualify for, with clear indicators.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon secondary" style="background:rgba(15,118,110,0.1);">
+          <i class="fa-solid fa-calendar-check" style="color:var(--color-secondary);"></i>
+        </div>
+        <h5 class="fw-600 mb-2">Drive Management</h5>
+        <p class="text-muted fs-sm">Universities can schedule campus drives, manage rounds, and track student participation end-to-end.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon accent" style="background:rgba(245,158,11,0.1);">
+          <i class="fa-solid fa-chart-line text-accent"></i>
+        </div>
+        <h5 class="fw-600 mb-2">Real-time Analytics</h5>
+        <p class="text-muted fs-sm">Powerful dashboards with placement rates, company-wise reports, and exportable data for insights.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon success" style="background:rgba(22,163,74,0.1);">
+          <i class="fa-solid fa-bell" style="color:var(--color-success);"></i>
+        </div>
+        <h5 class="fw-600 mb-2">Instant Notifications</h5>
+        <p class="text-muted fs-sm">Real-time in-app notifications and email alerts for job updates, interview schedules, and offers.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon primary" style="background:rgba(30,58,138,0.1);">
+          <i class="fa-solid fa-file-pdf text-primary"></i>
+        </div>
+        <h5 class="fw-600 mb-2">Resume Management</h5>
+        <p class="text-muted fs-sm">Students build rich profiles with projects, skills, and a profile completeness meter to guide them.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon danger" style="background:rgba(220,38,38,0.1);">
+          <i class="fa-solid fa-shield-halved" style="color:var(--color-danger);"></i>
+        </div>
+        <h5 class="fw-600 mb-2">Role-based Security</h5>
+        <p class="text-muted fs-sm">Granular access control ensures each user only sees and does what their role permits.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Register as -->
+<section style="padding: 5rem 0; background: var(--color-surface-2);">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 style="font-size:2rem; font-weight:700;">Join PlacePro as</h2>
+      <p class="text-muted mt-2">Choose your role to get started on the right journey.</p>
+    </div>
+    <div class="grid-3">
+      <a href="{% url 'accounts:register_student' %}" class="role-card text-decoration-none">
+        <div class="feature-icon primary" style="background:rgba(30,58,138,0.1); margin:0 auto;">
+          <i class="fa-solid fa-user-graduate text-primary" style="font-size:1.5rem;"></i>
+        </div>
+        <h3 class="text-heading">Student</h3>
+        <p>Build your profile, browse jobs, apply, and track your placement journey.</p>
+        <span class="btn btn-primary btn-sm mt-2">Register as Student</span>
+      </a>
+      <a href="{% url 'accounts:register_university' %}" class="role-card text-decoration-none">
+        <div class="feature-icon secondary" style="background:rgba(15,118,110,0.1); margin:0 auto;">
+          <i class="fa-solid fa-university" style="color:var(--color-secondary); font-size:1.5rem;"></i>
+        </div>
+        <h3 class="text-heading">University</h3>
+        <p>Manage students, coordinate campus drives, and generate placement reports.</p>
+        <span class="btn btn-secondary btn-sm mt-2">Register University</span>
+      </a>
+      <a href="{% url 'accounts:register_company' %}" class="role-card text-decoration-none">
+        <div class="feature-icon accent" style="background:rgba(245,158,11,0.1); margin:0 auto;">
+          <i class="fa-solid fa-building text-accent" style="font-size:1.5rem;"></i>
+        </div>
+        <h3 class="text-heading">Company</h3>
+        <p>Post jobs, browse eligible candidates, and manage your entire hiring pipeline.</p>
+        <span class="btn btn-accent btn-sm mt-2">Register Company</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer style="background:var(--color-primary); color:rgba(255,255,255,0.7); padding:2.5rem 0; text-align:center;">
+  <div class="container">
+    <div class="sidebar-logo justify-content-center mb-2" style="color:#fff;">
+      <div class="sidebar-logo-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+      <span>PlacePro</span>
+    </div>
+    <p style="font-size:0.875rem;">© 2026 PlacePro. Campus Placement Management Platform. All rights reserved.</p>
+  </div>
+</footer>
+{% endblock %}

@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+{% block title %}Recruiter Dashboard - {{ company.company_name }}{% endblock %}
+{% block page_title %}{{ company.company_name }} - Hiring Dashboard{% endblock %}
+
+{% block content %}
+<!-- Metric Cards -->
+<div class="row g-3 mb-4">
+  <div class="col-sm-6 col-xl-3">
+    <div class="stat-card">
+      <div class="stat-icon primary">
+        <i class="fa-solid fa-briefcase"></i>
+      </div>
+      <div>
+        <div class="stat-value">{{ active_jobs }}</div>
+        <div class="stat-label">Active Job Openings</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-6 col-xl-3">
+    <div class="stat-card">
+      <div class="stat-icon secondary">
+        <i class="fa-solid fa-users"></i>
+      </div>
+      <div>
+        <div class="stat-value">{{ total_applications }}</div>
+        <div class="stat-label">Total Applicants</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-6 col-xl-3">
+    <div class="stat-card">
+      <div class="stat-icon accent">
+        <i class="fa-solid fa-user-clock"></i>
+      </div>
+      <div>
+        <div class="stat-value">{{ shortlisted }}</div>
+        <div class="stat-label">Shortlisted Candidates</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-6 col-xl-3">
+    <div class="stat-card">
+      <div class="stat-icon success">
+        <i class="fa-solid fa-user-check"></i>
+      </div>
+      <div>
+        <div class="stat-value">{{ hired }}</div>
+        <div class="stat-label">Hired / Selected</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Quick Action shortcuts -->
+<div class="card shadow-sm border mb-4">
+  <div class="card-body p-3">
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+      <div class="fw-bold text-dark"><i class="fa-solid fa-bolt text-warning me-2"></i>Recruiter Toolkit</div>
+      <div class="d-flex flex-wrap gap-2">
+        <a href="{% url 'companies:create_job' %}" class="btn btn-primary btn-sm">
+          <i class="fa-solid fa-plus me-1"></i> Post New Job
+        </a>
+        <a href="{% url 'companies:jobs' %}" class="btn btn-secondary btn-sm">
+          <i class="fa-solid fa-list-check me-1"></i> Manage Job Postings
+        </a>
+        <a href="{% url 'companies:applicants' %}" class="btn btn-outline-primary btn-sm">
+          <i class="fa-solid fa-users-viewfinder me-1"></i> Review Applicants
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Recent Applicants -->
+<div class="card shadow-sm border mb-4">
+  <div class="card-header bg-white py-3 d-flex align-items-center justify-content-between border-bottom">
+    <h5 class="fw-bold mb-0 text-dark"><i class="fa-solid fa-clock-rotate-left text-primary me-2"></i>Recent Candidate Applications</h5>
+    <a href="{% url 'companies:applicants' %}" class="btn btn-sm btn-outline-primary">View All Applicants</a>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>Candidate</th>
+          <th>University</th>
+          <th>Applied Job</th>
+          <th>CGPA</th>
+          <th>Applied On</th>
+          <th>Status</th>
+          <th class="text-end">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for app in recent_applications %}
+          <tr>
+            <td>
+              <div class="fw-bold text-dark">{{ app.student.full_name }}</div>
+              <small class="text-muted">{{ app.student.user.email }}</small>
+            </td>
+            <td class="small">{{ app.student.university.name }}</td>
+            <td class="small fw-semibold text-dark">{{ app.job.title }}</td>
+            <td class="small text-primary fw-bold">{{ app.student.cgpa }}</td>
+            <td class="small text-muted">{{ app.applied_at|date:"M d, Y" }}</td>
+            <td>
+              <span class="badge
+                {% if app.status == 'SELECTED' %}badge-selected
+                {% elif app.status == 'INTERVIEW' %}badge-interview
+                {% elif app.status == 'SHORTLISTED' %}badge-shortlisted
+                {% elif app.status == 'REJECTED' %}badge-rejected
+                {% elif app.status == 'OFFER_SENT' %}badge-offer_sent
+                {% else %}badge-applied{% endif %}">
+                {{ app.status }}
+              </span>
+            </td>
+            <td class="text-end">
+              <a href="{% url 'companies:applicants' %}?status={{ app.status }}" class="btn btn-sm btn-outline-primary py-1 px-2">
+                <i class="fa-solid fa-arrow-right"></i>
+              </a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="7" class="text-center py-5 text-muted">
+              <i class="fa-solid fa-users mb-2" style="font-size: 2.5rem; opacity: 0.3;"></i>
+              <p class="mb-0">No candidate applications received yet. Post jobs to start receiving applications.</p>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

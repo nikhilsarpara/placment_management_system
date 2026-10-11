@@ -1,0 +1,5 @@
+Django>=5.0,<5.1
+mongoengine
+python-dotenv
+pymongo
+django-environ

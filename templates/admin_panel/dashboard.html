@@ -1,0 +1,210 @@
+{% extends 'base.html' %}
+{% block title %}Admin Dashboard{% endblock %}
+{% block page_title %}Platform Overview{% endblock %}
+
+{% block content %}
+<div class="row g-3 mb-4">
+  <!-- Stat Cards -->
+  <div class="col-sm-6 col-xl-3">
+    <div class="stat-card">
+      <div class="stat-icon primary">
+        <i class="fa-solid fa-user-graduate"></i>
+      </div>
+      <div>
+        <div class="stat-value">{{ total_students }}</div>
+        <div class="stat-label">Registered Students</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-6 col-xl-3">
+    <div class="stat-card">
+      <div class="stat-icon secondary">
+        <i class="fa-solid fa-building"></i>
+      </div>
+      <div>
+        <div class="stat-value">{{ total_companies }}</div>
+        <div class="stat-label">Partner Companies</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-6 col-xl-3">
+    <div class="stat-card">
+      <div class="stat-icon accent">
+        <i class="fa-solid fa-university"></i>
+      </div>
+      <div>
+        <div class="stat-value">{{ total_universities }}</div>
+        <div class="stat-label">Universities</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-6 col-xl-3">
+    <div class="stat-card">
+      <div class="stat-icon success">
+        <i class="fa-solid fa-briefcase"></i>
+      </div>
+      <div>
+        <div class="stat-value">{{ active_jobs }}</div>
+        <div class="stat-label">Active Job Openings</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Secondary Stats & Pending alerts -->
+{% if pending_universities > 0 or pending_companies > 0 %}
+<div class="row g-3 mb-4">
+  {% if pending_universities > 0 %}
+  <div class="col-md-6">
+    <div class="alert alert-warning d-flex align-items-center justify-content-between p-3 m-0 rounded-3">
+      <div class="d-flex align-items-center gap-2">
+        <i class="fa-solid fa-triangle-exclamation fs-5"></i>
+        <span><strong>{{ pending_universities }}</strong> university application{{ pending_universities|pluralize }} awaiting review</span>
+      </div>
+      <a href="{% url 'admin_panel:university_list' %}?status=PENDING" class="btn btn-sm btn-warning">Review</a>
+    </div>
+  </div>
+  {% endif %}
+
+  {% if pending_companies > 0 %}
+  <div class="col-md-6">
+    <div class="alert alert-info d-flex align-items-center justify-content-between p-3 m-0 rounded-3">
+      <div class="d-flex align-items-center gap-2">
+        <i class="fa-solid fa-circle-info fs-5"></i>
+        <span><strong>{{ pending_companies }}</strong> company registration{{ pending_companies|pluralize }} awaiting verification</span>
+      </div>
+      <a href="{% url 'admin_panel:company_list' %}?status=PENDING" class="btn btn-sm btn-info">Review</a>
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endif %}
+
+<div class="row g-4 mb-4">
+  <!-- Chart -->
+  <div class="col-lg-8">
+    <div class="card h-100 shadow-sm">
+      <div class="card-header bg-white py-3 d-flex align-items-center justify-content-between border-bottom">
+        <h5 class="fw-bold mb-0 text-dark"><i class="fa-solid fa-chart-line text-primary me-2"></i>Placement Trends (Last 6 Months)</h5>
+        <span class="badge bg-success-subtle text-success border">Rate: {{ placement_rate }}%</span>
+      </div>
+      <div class="card-body">
+        <canvas id="placementsChart" height="230"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Top Recruiters -->
+  <div class="col-lg-4">
+    <div class="card h-100 shadow-sm">
+      <div class="card-header bg-white py-3 border-bottom">
+        <h5 class="fw-bold mb-0 text-dark"><i class="fa-solid fa-trophy text-warning me-2"></i>Top Recruiters</h5>
+      </div>
+      <div class="card-body p-0">
+        <div class="list-group list-group-flush">
+          {% for rec in top_recruiters %}
+            <div class="list-group-item d-flex align-items-center justify-content-between px-3 py-3 border-bottom">
+              <div class="d-flex align-items-center gap-3">
+                <div class="rounded-circle bg-primary bg-opacity-10 text-primary fw-bold d-flex align-items-center justify-content-center" style="width: 38px; height: 38px; font-size: 0.9rem;">
+                  {{ forloop.counter }}
+                </div>
+                <div>
+                  <div class="fw-bold text-dark">{{ rec.name }}</div>
+                  <small class="text-muted">Selections</small>
+                </div>
+              </div>
+              <span class="badge bg-primary rounded-pill px-3 py-2 fs-xs">{{ rec.count }} Hired</span>
+            </div>
+          {% empty %}
+            <div class="p-4 text-center text-muted">
+              <i class="fa-regular fa-building mb-2" style="font-size: 2rem;"></i>
+              <p class="small mb-0">No recruiter data recorded yet.</p>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Recent System Activity -->
+<div class="card shadow-sm">
+  <div class="card-header bg-white py-3 d-flex align-items-center justify-content-between border-bottom">
+    <h5 class="fw-bold mb-0 text-dark"><i class="fa-solid fa-list-check text-secondary me-2"></i>Recent System Activity</h5>
+    <a href="{% url 'admin_panel:activity_logs' %}" class="btn btn-sm btn-outline-primary">View Full Audit Log</a>
+  </div>
+  <div class="table-responsive">
+    <table class="table align-middle mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>Timestamp</th>
+          <th>Action</th>
+          <th>Details</th>
+          <th>User</th>
+          <th>IP Address</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for log in recent_logs %}
+          <tr>
+            <td class="text-muted small">{{ log.timestamp|date:"M d, Y H:i" }}</td>
+            <td><span class="badge bg-secondary-subtle text-secondary border font-monospace">{{ log.action }}</span></td>
+            <td class="text-dark small">{{ log.details }}</td>
+            <td class="small">{{ log.user.email|default:"System" }}</td>
+            <td class="text-muted font-monospace small">{{ log.ip_address|default:"-" }}</td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="5" class="text-center py-4 text-muted small">No recent logs found.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const chartData = {{ placements_chart|safe }};
+  const labels = chartData.map(item => item.month);
+  const data = chartData.map(item => item.count);
+
+  const ctx = document.getElementById('placementsChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Selected Placements',
+        data: data,
+        backgroundColor: 'rgba(30, 58, 138, 0.1)',
+        borderColor: '#1E3A8A',
+        borderWidth: 2.5,
+        tension: 0.35,
+        fill: true,
+        pointBackgroundColor: '#F59E0B',
+        pointRadius: 5
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: { precision: 0 }
+        }
+      }
+    }
+  });
+});
+</script>
+{% endblock %}

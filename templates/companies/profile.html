@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% block title %}Company Profile - {{ company.company_name }}{% endblock %}
+{% block page_title %}Employer Profile & Branding{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-10">
+    <div class="card shadow-sm border">
+      <div class="card-header bg-white py-3 border-bottom d-flex align-items-center justify-content-between">
+        <h5 class="fw-bold mb-0 text-dark"><i class="fa-solid fa-building text-primary me-2"></i>Company Details</h5>
+        <span class="badge badge-approved">{{ company.status }}</span>
+      </div>
+      <div class="card-body p-4">
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <label class="form-label" for="company_name">Company Legal Name</label>
+              <input type="text" name="company_name" id="company_name" class="form-control" value="{{ company.company_name }}" required>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label" for="industry">Industry Sector</label>
+              <input type="text" name="industry" id="industry" class="form-control" value="{{ company.industry|default:'' }}" placeholder="e.g. Fintech, Cloud, AI">
+            </div>
+            <div class="col-md-3">
+              <label class="form-label" for="size">Company Size</label>
+              <input type="text" name="size" id="size" class="form-control" value="{{ company.size|default:'' }}" placeholder="e.g. 50-200, 1000+">
+            </div>
+          </div>
+
+          <div class="row g-3 mb-3">
+            <div class="col-md-4">
+              <label class="form-label" for="hr_name">HR Contact Name</label>
+              <input type="text" name="hr_name" id="hr_name" class="form-control" value="{{ company.hr_name|default:'' }}">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label" for="hr_email">HR Contact Email</label>
+              <input type="email" name="hr_email" id="hr_email" class="form-control" value="{{ company.hr_email|default:'' }}">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label" for="hr_phone">HR Phone Number</label>
+              <input type="tel" name="hr_phone" id="hr_phone" class="form-control" value="{{ company.hr_phone|default:'' }}">
+            </div>
+          </div>
+
+          <div class="row g-3 mb-3">
+            <div class="col-md-8">
+              <label class="form-label" for="website">Corporate Website</label>
+              <input type="url" name="website" id="website" class="form-control" value="{{ company.website|default:'' }}" placeholder="https://www.company.com">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label" for="city">Headquarters City</label>
+              <input type="text" name="city" id="city" class="form-control" value="{{ company.city|default:'' }}">
+            </div>
+          </div>
+
+          <div class="form-group mb-3">
+            <label class="form-label" for="address">Office Address</label>
+            <textarea name="address" id="address" rows="2" class="form-control">{{ company.address|default:'' }}</textarea>
+          </div>
+
+          <div class="form-group mb-3">
+            <label class="form-label" for="description">About the Company</label>
+            <textarea name="description" id="description" rows="4" class="form-control" placeholder="Company mission, culture, and overview for prospective students...">{{ company.description|default:'' }}</textarea>
+          </div>
+
+          <div class="form-group mb-4">
+            <label class="form-label" for="logo">Company Logo</label>
+            {% if company.logo_path %}
+              <div class="d-flex align-items-center gap-2 mb-2">
+                <img src="/media/{{ company.logo_path }}" alt="Logo" class="rounded border p-1" style="height: 48px;">
+                <span class="small text-muted">Current logo uploaded</span>
+              </div>
+            {% endif %}
+            <input type="file" name="logo" id="logo" class="form-control" accept="image/*">
+          </div>
+
+          <div class="d-flex justify-content-end gap-2">
+            <a href="{% url 'companies:dashboard' %}" class="btn btn-outline">Cancel</a>
+            <button type="submit" class="btn btn-primary px-4">
+              <i class="fa-solid fa-floppy-disk me-1"></i> Save Changes
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

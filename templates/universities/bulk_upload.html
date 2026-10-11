@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% block title %}Bulk Upload Students - {{ uni.name }}{% endblock %}
+{% block page_title %}Bulk Student Enrolment{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <div class="card shadow-sm border mb-4">
+      <div class="card-header bg-white py-3 border-bottom">
+        <h5 class="fw-bold mb-0 text-dark"><i class="fa-solid fa-file-csv text-primary me-2"></i>Upload Student CSV</h5>
+      </div>
+      <div class="card-body p-4">
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="form-group mb-4">
+            <label class="form-label" for="csv_file">Select CSV File</label>
+            <input type="file" name="csv_file" id="csv_file" class="form-control" accept=".csv" required>
+            <small class="text-muted mt-1 d-block">
+              Upload a valid comma-separated values (.csv) file containing student records.
+            </small>
+          </div>
+
+          <div class="d-flex justify-content-between align-items-center">
+            <a href="{% url 'universities:students' %}" class="btn btn-outline">
+              <i class="fa-solid fa-arrow-left me-1"></i> Back to Students
+            </a>
+            <button type="submit" class="btn btn-primary px-4">
+              <i class="fa-solid fa-upload me-1"></i> Import Students
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Format Guide -->
+    <div class="card shadow-sm border">
+      <div class="card-header bg-white py-3 border-bottom">
+        <h6 class="fw-bold mb-0 text-dark"><i class="fa-solid fa-circle-info text-info me-2"></i>Required CSV Header Format</h6>
+      </div>
+      <div class="card-body p-4">
+        <p class="small text-muted mb-3">Ensure your CSV file contains the following column headers in the first row:</p>
+        
+        <div class="table-responsive mb-3">
+          <table class="table table-bordered table-sm font-monospace small mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>email</th>
+                <th>password</th>
+                <th>first_name</th>
+                <th>last_name</th>
+                <th>roll_number</th>
+                <th>cgpa</th>
+                <th>batch_year</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>john.doe@univ.edu</td>
+                <td>Welcome@123</td>
+                <td>John</td>
+                <td>Doe</td>
+                <td>CS2026-001</td>
+                <td>8.5</td>
+                <td>2026</td>
+              </tr>
+              <tr>
+                <td>jane.smith@univ.edu</td>
+                <td>Welcome@123</td>
+                <td>Jane</td>
+                <td>Smith</td>
+                <td>CS2026-002</td>
+                <td>9.2</td>
+                <td>2026</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="alert alert-light border small text-muted mb-0">
+          <strong>Note:</strong> Passwords will be securely hashed upon creation. If left blank in CSV, the default password <code>Welcome@123</code> is assigned.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
